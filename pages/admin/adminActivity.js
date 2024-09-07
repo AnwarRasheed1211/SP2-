@@ -3,9 +3,49 @@ import Image from "next/image";
 import styles from '@/styles/activity.module.css';
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
-
+import { useEffect, useState } from "react";
+import { db } from '../api/firebaseConfig';
+import { collection, getDocs } from "firebase/firestore"; // Import Firestore functions
 
 export default function Activity() {
+    const [posts, setPosts] = useState([]);  // Initialize with an empty array
+    const [showModal, setShowModal] = useState(false);
+    const [postToDelete, setPostToDelete] = useState(null);
+
+    // Fetch posts from Firestore when component mounts
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const querySnapshot = await getDocs(collection(db, "activity"));  // Fetch data from Firestore collection 'activity'
+                const fetchedPosts = querySnapshot.docs.map((doc) => ({
+                    id: doc.id,  // Store document ID for potential future use
+                    ...doc.data()  // Spread the document data
+                }));
+                setPosts(fetchedPosts);  // Update the state with fetched posts
+            } catch (error) {
+                console.error("Error fetching posts: ", error);
+            }
+        };
+
+        fetchPosts();  // Call the fetchPosts function
+    }, []);  // Empty dependency array ensures this runs once when the component mounts
+
+    const handleDeleteClick = (post) => {
+        setPostToDelete(post);
+        setShowModal(true);
+    };
+
+    const confirmDelete = () => {
+        setPosts(posts.filter(post => post !== postToDelete));  // Remove the post locally for now
+        setShowModal(false);
+        setPostToDelete(null);
+        // TODO: Delete the post from Firestore here
+    };
+
+    const cancelDelete = () => {
+        setShowModal(false);
+        setPostToDelete(null);
+    };
 
     return (
         <>
@@ -20,63 +60,47 @@ export default function Activity() {
                         </Link>
                     </div>
                     <div className={styles.postContainer}>
-                        <div className={styles.postBox}>
-                            <div className={styles.detailContainer}>
+                        {posts.map((post, index) => (
+                            <div key={post.id || index} className={styles.postBox}>  {/* Use Firestore doc ID as key if available */}
+                                <div className={styles.detailContainer}>
                                     <div className={styles.postTitle}>
-                                        Special discount for Eid Al Adha
+                                        {post.title}
                                     </div>
                                     <div className={styles.line} />
                                     <div className={styles.postDescription}>
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
+                                        {post.description}
                                     </div>
-                                    <div className= {styles.dateRange}>
-                                        20/6/2024 - 30/6/2024
+                                    <div className={styles.dateRange}>
+                                        {post.date}  {/* Adjust field name based on Firestore data */}
                                     </div>
                                     <div className={styles.line2} />
-                           </div>
-                           <Image src="/event.png" width={300} height={200} className={styles.iconImage} alt="Post Image" />
-                        </div>
-                        <div className={styles.postBox}>
-                            <div className={styles.detailContainer}>
-                                    <div className={styles.postTitle}>
-                                        Special discount for Eid Al Adha
-                                    </div>
-                                    <div className={styles.line} />
-                                    <div className={styles.postDescription}>
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
-                                    </div>
-                                    <div className= {styles.dateRange}>
-                                        Date: June 20, 2024 - June 30, 2024
-                                    </div>
-                           </div>
-                           <Image src="/event.png" width={300} height={200} className={styles.iconImage} alt="Post Image" />
-                        </div>
-                        <div className={styles.postBox}>
-                            <div className={styles.detailContainer}>
-                                    <div className={styles.postTitle}>
-                                        Special discount for Eid Al Adha
-                                    </div>
-                                    <div className={styles.line} />
-                                    <div className={styles.postDescription}>
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
-                                        Enjoy a special discount this Eid al-Adha with up to 50% off on all our products, making your celebrations even more joyous
-                                    </div>
-                                    <div className= {styles.dateRange}>
-                                        Date: June 20, 2024 - June 30, 2024
-                                    </div>
-                           </div>
-                           <Image src="/event.png" width={300} height={200} className={styles.iconImage} alt="Post Image" />
-                        </div>
+                                    {post.imageUrl && (  // Ensure imageUrl is present before rendering Image component
+                                        <Image
+                                            src={post.imageUrl}
+                                            width={300}
+                                            height={200}
+                                            className={styles.iconImage}
+                                            alt="Post Image"
+                                            objectFit="cover"
+                                        />
+                                    )}
+                                </div>
+                                <button className={styles.deleteButton} onClick={() => handleDeleteClick(post)}>Delete</button>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
-                
-            
+            {showModal && (
+                <div className={styles.modal}>
+                    <div className={styles.modalContent}>
+                        <p>Are you sure you want to delete this post?</p>
+                        <button className={styles.confirmButton} onClick={confirmDelete}>Yes</button>
+                        <button className={styles.cancelButton} onClick={cancelDelete}>No</button>
+                    </div>
+                </div>
+            )}
             <AdminNavbarBottom />
         </>
-    )
-
-
+    );
 }

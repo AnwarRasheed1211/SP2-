@@ -1,12 +1,12 @@
 import AdminNavbar from "@/components/adminNavbar";
-import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Image from "next/image";
-import styles from '@/styles/admin.module.css';
 import Link from "next/link";
+import Modal from "@/components/Modal";  // Import the Modal component
+import styles from '@/styles/admin.module.css';
 
-export default function adminHome() {
+export default function AdminHome() {
     return (
-        <> 
+        <>
             <AdminNavbar />
             <div className={styles.mainSection}>
                 <div className={styles.imageContainer}>
@@ -52,10 +52,12 @@ export default function adminHome() {
                 </div>
 
                 <div className={styles.line3} />
-
             </div>
-            
-            <AdminNavbarBottom />
+
+            {/* Modal for Pop-Up Message */}
+            <Modal title="Welcome!">
+                <p>This is an important announcement for all admins.</p>
+            </Modal>
         </>
     );
 }
