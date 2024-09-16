@@ -1,43 +1,31 @@
-import React, { useState, useEffect } from "react";
-import ReactDOM from "react-dom";
+// components/Modal.js
+import { useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import styles from '@/styles/modal.module.css';
 
-const Modal = ({ children, title }) => {
-    const [isVisible, setIsVisible] = useState(false);  // State to control modal visibility
+const Modal = ({ title, children, onClose }) => {
+    const [mounted, setMounted] = useState(false);
 
-    // Automatically show modal when the component mounts
     useEffect(() => {
-        setIsVisible(true);
+        setMounted(true);  // Component is mounted on the client side
     }, []);
 
-    // Function to handle closing the modal
-    const handleCloseClick = (e) => {
-        e.preventDefault();
-        setIsVisible(false);
-    };
+    if (!mounted) return null;  // Ensure it only renders on the client
 
-    // If the modal is not visible, return null
-    if (!isVisible) return null;
-
-    // Modal content to be displayed
-    const modalContent = (
-        <div className="modal-overlay">
-            <div className="modal-wrapper">
-                <div className="modal">
-                    <div className="modal-header">
-                        <a href="#" onClick={handleCloseClick}>
-                            x
-                        </a>
-                    </div>
-                    {title && <h1>{title}</h1>}
-                    <div className="modal-body">{children}</div>
-                </div>
-            </div>
-        </div>
-    );
+    const modalRoot = document.getElementById('modal-root');
+    if (!modalRoot) return null;
 
     return ReactDOM.createPortal(
-        modalContent,
-        document.getElementById("modal-root")  // Ensure this element exists in your document
+        <div className={styles.modalOverlay}>
+            <div className={styles.modal}>
+                <div className={styles.modalHeader}>
+                    <h2>{title}</h2>
+                    <button onClick={onClose}>Close</button>
+                </div>
+                <div className={styles.modalContent}>{children}</div>
+            </div>
+        </div>,
+        modalRoot
     );
 };
 
