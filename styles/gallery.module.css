@@ -16,6 +16,9 @@
     align-items: center;
     width: 100%;
     background-color: rgba(254, 254, 254, 0.8);
+    background-color: transparent; /* Optional if using a background image */
+    background: url('../public/gallery_page.jpg') no-repeat center center;
+    background-size: cover; /* This will make the background image cover the entire section */
 }
 
 .head {

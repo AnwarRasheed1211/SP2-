@@ -8,7 +8,7 @@ import Style from '@/styles/addmenu.module.css';
 import AdminNavbar from "@/components/adminNavbar";
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
-const { getDatabase } = require('firebase-admin/database');
+
 
 export default function Addmenu() {
     const [fileupload, setFileupload] = useState(null);

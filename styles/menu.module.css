@@ -5,6 +5,9 @@
     width: 100%; /* Adjust as necessary */
     min-height: 100vh;
     background-color: rgb(240, 240, 240); /* Optional: Add a background color */
+    
+   
+    
 }
 
 .mainSection {
@@ -14,6 +17,9 @@
     width: 100%;
    /*  background-color: rgba(254, 254, 254, 0.8);  Background color */
     flex-grow: 1; /* Allows it to grow and fill the remaining space */
+    
+    
+    
 }
 
 .imageContainer {
@@ -49,21 +55,28 @@
 
 .menuBox {
     display: flex;
-    flex-direction: column; /* Arrange post boxes in a column*/
+    flex-direction: column; /* Arrange post boxes in a column */
     justify-content: center; /* Center the post boxes horizontally */
     align-items: center; /* Center the content vertically */
-    background-color: rgba(240, 240, 240, 0.9); /* Set background color */
+    background-color: rgba(0, 0, 0, 0.904); /* Darker overlay */
     padding: 20px; /* Optional: Add padding around the container */
     width: 100%;
     height: 100%;
-   
-    /* border-radius: 10px;  Optional: Add rounded corners */   
+    background: url('../public/menu_page.jpg') no-repeat center center;
+    background-size: cover; /* This will make the background image cover the entire section */
+    background-blend-mode: darken; /* Blend the image with the darker color */
+    width: 100%; /* Adjust as necessary */
+    min-height: 100vh
 }
 
 .categoriesBox{
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
+  
+  
+
+  
 }
 
 .categoriesBox button {
@@ -78,12 +91,15 @@
   margin: 4px 10px;
   cursor: pointer;
   border-radius: 5px;
+  border: 1px solid #ddd;
+
 }
 
 .foodContainer {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    
 }
 
 .menuItem {
