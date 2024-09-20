@@ -1,39 +1,36 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
+import { auth, signInWithGoogle } from '@/pages/api/firebaseConfig';  
+import styles from '@/styles/login.module.css';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // You can perform your login logic here
-    // For simplicity, let's just display the entered email and password
-    console.log('Email:', email);
-    console.log('Password:', password);
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    const user = await signInWithGoogle();
+    setLoading(false);
+    if (user) {
+      const email = user.email;
+      if (email === 'u6228105@au.edu' || email === 'razielpark1@gmail.com') {
+        router.push('/admin/adminHome'); 
+      } else {
+        router.push('/customer/customerHome'); 
+      }
+    }
   };
 
   return (
-    <div>
-      <h1>Login Page</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Email:</label>
-          <input type="email" value={email} onChange={handleEmailChange} />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" value={password} onChange={handlePasswordChange} />
-        </div>
-        <button type="submit">Login</button>
-      </form>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Login</h1>
+      <button 
+        className={styles.signInButton} 
+        onClick={handleGoogleSignIn} 
+        disabled={loading}
+      >
+        {loading ? 'Signing in...' : 'Sign in with Google'}
+      </button>
     </div>
   );
 }
