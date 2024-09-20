@@ -4,6 +4,9 @@
     align-items: center;
     width: 100%; /* Adjust as necessary */
     background-color: rgba(254, 254, 254, 0.8); /* Optional: Add a background color */
+    background: url('../public/aboutus_page.jpg');
+    background-size: cover;
+    width: 100%;
 }
 
 .aboutPage {

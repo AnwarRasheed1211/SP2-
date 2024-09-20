@@ -25,7 +25,7 @@
 .imageContainer {
     position: relative; /* Ensures the text can be positioned absolutely within this container */
     width: 100%; /* Set width as per your image */
-    height: 500px; /* Set height as per your image */
+    height: 600px; /* Set height as per your image */
     overflow: hidden; /* Ensures that any overflow is hidden */
      /* margin-bottom: 20px; Adds space between the image and the next section */
 }

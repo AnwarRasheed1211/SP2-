@@ -24,7 +24,7 @@ const customerBottomNavbar = () => {
                             </div>
                         </div>
                         <div className={styles.socialLinksContainer}>
-                            <Link href="https://www.facebook.com">
+                            <Link href="https://www.facebook.com/profile.php?id=61556568038363">
                                 <div className={styles.socialLink}>Facebook</div>
                             </Link>
                             <Link href="https://www.twitter.com">
