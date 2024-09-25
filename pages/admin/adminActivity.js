@@ -3,43 +3,66 @@ import Image from "next/image";
 import styles from '@/styles/activity.module.css';
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { db } from '../api/firebaseConfig';
-import { collection, getDocs } from "firebase/firestore"; // Import Firestore functions
+import React, { useState, useEffect } from 'react';
+import { db } from "@/pages/api/firebaseConfig"; // Make sure to update the import path accordingly
+import { collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { getStorage, ref, deleteObject } from "firebase/storage";
 
 export default function Activity() {
-    const [posts, setPosts] = useState([]);  // Initialize with an empty array
+    const [posts, setPosts] = useState([]);
     const [showModal, setShowModal] = useState(false);
     const [postToDelete, setPostToDelete] = useState(null);
 
-    // Fetch posts from Firestore when component mounts
+    // Fetching activity posts from Firestore
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                const querySnapshot = await getDocs(collection(db, "activity"));  // Fetch data from Firestore collection 'activity'
-                const fetchedPosts = querySnapshot.docs.map((doc) => ({
-                    id: doc.id,  // Store document ID for potential future use
-                    ...doc.data()  // Spread the document data
+                const activitiesCollection = collection(db, 'camels', 'camelsrestaurant', 'activities');
+                const activitySnapshot = await getDocs(activitiesCollection);
+                const activityPosts = activitySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
                 }));
-                setPosts(fetchedPosts);  // Update the state with fetched posts
+
+                // Sort posts by startDate in ascending order
+                activityPosts.sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+                
+                setPosts(activityPosts);
             } catch (error) {
-                console.error("Error fetching posts: ", error);
+                console.error("Error fetching activities: ", error);
             }
         };
 
-        fetchPosts();  // Call the fetchPosts function
-    }, []);  // Empty dependency array ensures this runs once when the component mounts
+        fetchPosts();
+    }, []);
 
     const handleDeleteClick = (post) => {
         setPostToDelete(post);
         setShowModal(true);
     };
 
-    const confirmDelete = () => {
-        setPosts(posts.filter(post => post !== postToDelete));  // Remove the post locally for now
-        setShowModal(false);
-        setPostToDelete(null);
-        // TODO: Delete the post from Firestore here
+    const confirmDelete = async () => {
+        if (postToDelete) {
+            try {
+                // Delete from Firestore
+                const postRef = doc(db, 'camels', 'camelsrestaurant', 'activities', postToDelete.id);
+                await deleteDoc(postRef);
+
+                // Delete image from Storage
+                const storage = getStorage();
+                const imageRef = ref(storage, postToDelete.imageUrl); // Ensure this is the correct path
+                await deleteObject(imageRef);
+
+                // Update local state
+                setPosts(posts.filter(post => post.id !== postToDelete.id));
+                setShowModal(false);
+                setPostToDelete(null);
+
+                alert("Post deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting post: ", error);
+            }
+        }
     };
 
     const cancelDelete = () => {
@@ -54,14 +77,14 @@ export default function Activity() {
                 <div className={styles.mainSection}>
                     <div className={styles.imageContainer}>
                         <Image src="/activitybackground.jpg" alt="Logo" layout="fill" objectFit="cover" className={styles.image} />
-                        <div className={styles.header}>ACTIVITY</div>
+                        <div className={styles.header}>Special Events & Offers</div>
                         <Link href={'/admin/postActivity'}>
                             <button className={styles.postButton}>Post</button>
                         </Link>
                     </div>
                     <div className={styles.postContainer}>
-                        {posts.map((post, index) => (
-                            <div key={post.id || index} className={styles.postBox}>  {/* Use Firestore doc ID as key if available */}
+                        {posts.map((post) => (
+                            <div key={post.id} className={styles.postBox}>
                                 <div className={styles.detailContainer}>
                                     <div className={styles.postTitle}>
                                         {post.title}
@@ -71,19 +94,10 @@ export default function Activity() {
                                         {post.description}
                                     </div>
                                     <div className={styles.dateRange}>
-                                        {post.date}  {/* Adjust field name based on Firestore data */}
+                                        {post.startDate} - {post.endDate}
                                     </div>
                                     <div className={styles.line2} />
-                                    {post.imageUrl && (  // Ensure imageUrl is present before rendering Image component
-                                        <Image
-                                            src={post.imageUrl}
-                                            width={300}
-                                            height={200}
-                                            className={styles.iconImage}
-                                            alt="Post Image"
-                                            objectFit="cover"
-                                        />
-                                    )}
+                                    <Image src={post.imageUrl} width={300} height={200} className={styles.iconImage} alt="Post Image" />
                                 </div>
                                 <button className={styles.deleteButton} onClick={() => handleDeleteClick(post)}>Delete</button>
                             </div>
@@ -102,5 +116,5 @@ export default function Activity() {
             )}
             <AdminNavbarBottom />
         </>
-    );
+    )
 }

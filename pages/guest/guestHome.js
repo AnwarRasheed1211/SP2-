@@ -1,4 +1,4 @@
-import CustomerNavbar from "@/components/customerNavbar";
+import Navbar from "@/components/navbar";
 import CustomerNavbarBottom from "@/components/customerBottomNavbar";
 import React, { useState, useEffect } from 'react';
 import Image from "next/image";
@@ -46,18 +46,13 @@ export default function customerHome() {
         
     return (
         <> 
-            <CustomerNavbar />
+            <Navbar />
             <div className={styles.mainSection}>
                 <div className={styles.imageContainer}>
                     <Image src="/homebackgr0und.jpg" alt="Logo" layout="fill" objectFit="cover" className={styles.image} />
                     <div className={styles.header}>Welcome To Camels</div>
                     <div className={styles.header1}>Cafe & Restaurant</div>
-                    <Link href={'/customer/customerMenu'}>
-                        <button className={styles.menuButton}>Menu</button>
-                    </Link>
-                    <Link href={'/booking/bookingTable'}>
-                        <button className={styles.bookTableButton}>Book a Table</button>
-                    </Link>
+                    
                 </div>
 
                 <div className={styles.head}>ANNOUNCEMENT</div>

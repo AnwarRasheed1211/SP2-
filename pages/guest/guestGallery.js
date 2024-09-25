@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import CustomerNavbar from "@/components/customerNavbar";
+import Navbar from "@/components/navbar";
 import CustomerNavbarBottom from "@/components/customerBottomNavbar";
 import Image from "next/image";
 import styles from '@/styles/gallery.module.css';
@@ -21,7 +21,7 @@ export default function CustomerGallery() {
 
     return (
         <>
-            <CustomerNavbar />
+            <Navbar />
             <div className={styles['background']}>
                 <div className={styles['galleryPage']}>
                     <div className={styles.head}> GALLERY </div>

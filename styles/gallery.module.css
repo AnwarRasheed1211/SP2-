@@ -14,8 +14,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    background-color: rgba(254, 254, 254, 0.8);
-    background: url('../public/gallery_page.jpg') no-repeat center center;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../public/gallery_page.jpg') no-repeat center center;
     background-size: cover; /* This will make the background image cover the entire section */
 }
 

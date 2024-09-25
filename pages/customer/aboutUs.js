@@ -30,12 +30,12 @@ export default function Aboutus() {
             <div className={styles.paragraph}>
               Experience an authentic Arabic restaurant offering traditional meals and aromatic Arabic tea. Enjoy the convenience of advance seat booking for a seamless dining experience.
             </div>
-            
+
             {/* Google Maps Section */}
             <div className={styles.mapContainer}>
               <GoogleMaps /> {/* Use the component */}
             </div>
-            
+
           </div>
         </div>
       </div>

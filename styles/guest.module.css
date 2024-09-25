@@ -21,7 +21,7 @@
 }
 
 .button {
-    margin-left: 10px; /* Adds space between buttons */
+    margin-left: 50px; /* Adds space between buttons */
     padding: 10px 20px;
     color: rgb(3, 3, 3); /* Initial text color */
     border-radius: 5px;
@@ -29,7 +29,7 @@
     text-align: center;
     position: relative;
     text-decoration: none; /* No underline initially */
-    font-size: 20px;
+    font-size: 22px;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.3s; /* Smooth transitions */
 }
@@ -57,32 +57,56 @@
 .role{
     font-size: 1.2rem;          /* Slightly larger font size */
     font-weight: bold;          /* Make the text bold */
-    color: #333;                /* Dark text color */
-    background-color: #f0f0f0d9;  /* Light gray background for contrast */
+    color: #0d0606;                /* Dark text color */
+    background-color: #ffd900ad;  /* Light gray background for contrast */
     padding: 10px 15px;         /* Add some padding */
     border-radius: 8px;         /* Rounded corners */
     display: inline-block;      /* Keep the element inline but allow padding */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
     transition: background-color 0.3s ease;   /* Smooth hover effect*/
-    margin-left: 50px;
+    margin-left: 100px;
 }
 
 .userInfo {
     display: flex;
     align-items: center; /* Align items vertically in the center */
-    margin-left: 40px;
+    margin-left: 10px;
 }
 
 .profileIcon {
-    margin-right: 10px; /* Adds space between the image and the text */
+    margin-left: 50px; /* Adds space between the image and the text */
+}
+
+.dropdown {
+  margin-left: 40px;
+  text-align: center;
 }
 
 .userText {
-    font-size: 15px; /* Adjust the font size as needed */
-    color: #333; /* Change the color as needed */
-    font-weight: bold; /* Bold text */
-    margin-left: 10px;
-    margin-top: 5px;
+    font-size: 1.2rem; /* Font size for the login text */
+    margin-bottom: 10px; /* Space below the login text */
+    color: #333; /* Text color */
+}
+
+.signInButton {
+    background-color: #4285F4; /* Google blue */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px 15px; /* Padding for the button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+    font-size: 1rem; /* Font size */
+    width: 100%; /* Full width button */
+}
+
+.signInButton:hover {
+    background-color: #357AE8; /* Darker blue on hover */
+}
+
+.signInButton:disabled {
+    background-color: #BDBDBD; /* Gray background for disabled state */
+    cursor: not-allowed; /* Not allowed cursor */
 }
 
 .logButton {

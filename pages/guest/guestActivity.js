@@ -1,4 +1,4 @@
-import CustomerNavbar from "@/components/customerNavbar";
+import Navbar from "@/components/navbar";
 import CustomerNavbarBottom from "@/components/customerBottomNavbar";
 import Image from "next/image";
 import styles from '@/styles/activity.module.css';
@@ -32,7 +32,7 @@ export default function customerActivity() {
 
     return (
         <>
-            <CustomerNavbar />
+            <Navbar />
             <div className={styles.background}>
                 <div className={styles.mainSection}>
                     <div className={styles.imageContainer}>
