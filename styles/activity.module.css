@@ -51,7 +51,7 @@
 
 .postButton {
     position: absolute;
-    top: 52%;
+    top: 60%; /* Move the button further down */
     left: 69%;
     transform: translate(-50%, -50%); /* Center the button */
     padding: 10px 50px;
@@ -65,6 +65,7 @@
     z-index: 2; /* Ensure the button is above the gradient and image */
     text-align: center;
 }
+
 
 
 .postContainer {

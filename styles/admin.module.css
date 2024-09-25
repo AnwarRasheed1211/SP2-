@@ -16,7 +16,7 @@
 .buttonContainer {
     display: flex;
     align-items: center;
-    margin-left: 300px; /* Adjust spacing between image and button as needed */
+    margin-left: 200px; /* Adjust spacing between image and button as needed */
 }
 
 .button {
@@ -49,14 +49,32 @@
     transform: scaleX(1);
 }
 
+.role{
+    font-size: 1.2rem;          /* Slightly larger font size */
+    font-weight: bold;          /* Make the text bold */
+    color: #333;                /* Dark text color */
+    background-color: #f0f0f0d9;  /* Light gray background for contrast */
+    padding: 10px 15px;         /* Add some padding */
+    border-radius: 8px;         /* Rounded corners */
+    display: inline-block;      /* Keep the element inline but allow padding */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for a lifted effect */
+    transition: background-color 0.3s ease;   /* Smooth hover effect*/
+    margin-left: 50px;
+}
+
 .userInfo {
     display: flex;
     align-items: center; /* Align items vertically in the center */
-    margin-left: 250px;
+    margin-left: 40px;
 }
 
 .profileIcon {
     margin-right: 10px; /* Adds space between the image and the text */
+}
+
+.lineIcon {
+    margin-right: 10px; /* Adds space between the image and the text */
+    margin-top: 1px;
 }
 
 .userText {
@@ -89,15 +107,16 @@
     transform: translateY(-2px); /* Slight lift on hover */
 }
 
+/* Admin Home Page */
 
 .mainSection {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%; /* Adjust as necessary */
-    background-color: transparent; /* Optional if using a background image */
-    background: url('../public/home_page.jpg') no-repeat center center;
-    background-size: cover; /* This will make the background image cover the entire section */
+    background-color: #0d131c;
+    background: url(/home_page.jpg) no-repeat center center;
+     /* Optional: Add a background color background: url(/front.jpg);*/
 }
 
 .imageContainer {
@@ -183,7 +202,7 @@
 .menuButton {
     position: absolute;
     top: 57%;
-    left: 48%;
+    left: 50%;
     transform: translate(-50%, -50%); /* Center the button */
     padding: 10px 50px;
     font-size: 20px; /* Adjust font size as needed */
@@ -200,7 +219,7 @@
 .bookTableButton {
     position: absolute;
     top: 57%;
-    left: 72%;
+    left: 71%;
     transform: translate(-50%, -50%); /* Center the button */
     padding: 10px 50px;
     font-size: 20px; /* Adjust font size as needed */
@@ -224,7 +243,7 @@
 .line2 {
     width: 100%; /* Adjust width as needed */
     height: 2px; /* Adjust height as needed */
-    background-color: rgb(255, 255, 255); /* Set the background color to black */
+    background-color: rgb(0, 0, 0); /* Set the background color to black */
     margin: 20px 0; /* Optional: Add some margin for spacing */
 }
 
@@ -331,22 +350,89 @@
     display: flex;
     justify-content: center;
     gap: 20px; /* Space between the videos */
-    margin-top: 20px; /* Space above the video container */
+    margin-top: 10px; /* Space above the video container */
 }
 
 .videoPlaceholder {
     width: 500px; /* Adjust width as needed */
-    height: 300px; /* Adjust height as needed */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #ddd; /* Background color for placeholder */
+    padding: 20px; /* Add padding for spacing */
+    background-color: #ffffff; /* White background for a clean look */
+    border: 1px solid #e0e0e0; /* Light border for definition */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin-bottom: 10px;
+     /* Margin margin: 20px 0; for spacing between elements */
+}
+
+.videoPlaceholder div {
+    margin-bottom: 15px; /* Space between text blocks */
+}
+
+.videoPlaceholder div:first-child {
+    font-size: 1.6em; /* Larger font for the title */
+    font-weight: bold; /* Bold title */
+    color: #333; /* Dark color for better contrast */
+}
+
+.videoPlaceholder div:nth-child(2) {
+    font-size: 1.1em; /* Standard font size for content */
+    color: #555; /* Medium color for content */
+    line-height: 1.7; /* Increased line height for readability */
+}
+
+.videoPlaceholder ul {
+    padding-left: 20px; /* Indent for list items */
+    list-style-type: none; /* Remove default bullets */
+}
+
+.videoPlaceholder ul li {
+    position: relative; /* Positioning for custom bullets */
+    margin-bottom: 10px; /* Space between list items */
+    padding-left: 25px; /* Space for custom bullets */
+    font-size: 1em; /* Standard font size for list items */
+    color: #444; /* Darker color for better contrast */
+}
+
+.videoPlaceholder ul li::before {
+    content: ''; /* Custom bullet */
+    position: absolute;
+    left: 0; /* Align to the left */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Center vertically */
+    width: 8px; /* Bullet size */
+    height: 8px; /* Bullet size */
+    background-color: #007bff; /* Blue bullet */
+    border-radius: 50%; /* Round bullet */
+}
+
+.policyHeader {
+    font-size: 1.6em; /* Larger font for the header */
+    font-weight: bold; /* Bold header */
+    color: #333; /* Dark color for better contrast */
+    margin-bottom: 15px; /* Space below header */
+}
+
+.policyList {
+    padding-left: 20px; /* Indent for list items */
+    list-style-type: none; /* Remove default bullets */
+}
+
+.policyList li {
+    margin-bottom: 10px; /* Space between list items */
+    font-size: 1.1em; /* Standard font size for list items */
+    color: #555; /* Medium color for content */
+    line-height: 1.6; /* Increased line height for readability */
+}
+
+.policyList li strong {
+    color: #007bff; /* Highlight policy titles with a different color */
 }
 
 .videoPlaceholderImage {
     max-width: 100%;
     height: auto;
 }
+
 
 /* Bottom navbar css */
 
