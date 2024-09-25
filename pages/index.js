@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Image from "next/image";
 import styles from '@/styles/customer.module.css';
 import Link from "next/link";
-import { db } from "../pages/api/firebaseConfig";
+import { db } from "@/pages/api/firebaseConfig";
 import { collection, getDocs } from "firebase/firestore";
 
-export default function restaurantHome() {
+export default function customerHome() {
     
         const [currentEventIndex, setCurrentEventIndex] = useState(0);
         const [posts, setPosts] = useState([]); // State for posts
@@ -52,12 +52,7 @@ export default function restaurantHome() {
                     <Image src="/homebackgr0und.jpg" alt="Logo" layout="fill" objectFit="cover" className={styles.image} />
                     <div className={styles.header}>Welcome To Camels</div>
                     <div className={styles.header1}>Cafe & Restaurant</div>
-                    <Link href={'/customer/customerMenu'}>
-                        <button className={styles.menuButton}>Menu</button>
-                    </Link>
-                    <Link href={'/booking/bookingTable'}>
-                        <button className={styles.bookTableButton}>Book a Table</button>
-                    </Link>
+                    
                 </div>
 
                 <div className={styles.head}>ANNOUNCEMENT</div>
