@@ -24,6 +24,8 @@ export default function Addmenu() {
   const [successMessage, setSuccessMessage] = useState('');  // Success message
   const [errorMessage, setErrorMessage] = useState('');      // Error message
 
+  let categories = ["All", "Main", "Fried Food", "Salad", "Dessert", "Drinks"];
+
   // Handle file input change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -118,43 +120,35 @@ export default function Addmenu() {
                   />
                 </div>
               )}
-              
+
               {/* Choose file input at the bottom of the container */}
               <input type="file" onChange={handleFileChange} />
             </div>
 
             <form className={Style['container-text']} onSubmit={handleSubmit}>
-              <label className={Style['text']}>Title</label>
-              <input 
-                className={Style['input']} 
-                value={title} 
-                onChange={(e) => setTitle(e.target.value)} 
-              />
-              <label className={Style['text']}>Category</label>
-              <input 
-                className={Style['input']} 
-                value={category} 
-                onChange={(e) => setCategory(e.target.value)} 
-              />
-              <label className={Style['text']}>Price</label>
-              <input 
-                className={Style['input']} 
-                value={price} 
-                onChange={(e) => setPrice(e.target.value)} 
-              />
-              <label className={Style['text']}>Description</label>
-              <input 
-                className={Style['input']} 
-                value={description} 
-                onChange={(e) => setDescription(e.target.value)} 
-              />
-              <button className={Style['create-button']} type="submit" disabled={uploading}>
-                {uploading ? 'Creating...' : 'Create'}
-              </button>
-              <Link href={'/admin/adminMenu'}>
-                <button className={Style['create-button']} type="button">Back</button>
-              </Link>
-            </form>
+                            <label className={Style['text']}>Title</label>
+                            <input className={Style['input']} value={title} onChange={(e) => setTitle(e.target.value)} />
+
+                            <label className={Style['text']}>Category</label>
+                            <select className={Style['input']} value={category} onChange={(e) => setCategory(e.target.value)}>
+                                {categories.map((cat, index) => (
+                                    <option key={index} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+
+                            <label className={Style['text']}>Price</label>
+                            <input className={Style['input']} type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+
+                            <label className={Style['text']}>Description</label>
+                            <textarea className={Style['input']} rows="3" cols="30" value={description} onChange={(e) => setDescription(e.target.value)} />
+
+                            <div className={Style['button-container']}>
+                                <button type="submit" className={Style['create-button']}>Create</button>
+                                <Link href={'/admin/adminMenu'}>
+                                    <button type="button" className={Style['create-button']}>Back</button>
+                                </Link>
+                            </div>
+                        </form>
             {successMessage && <p className={Style['success-message']}>{successMessage}</p>}
             {errorMessage && <p className={Style['error-message']}>{errorMessage}</p>}
           </div>
