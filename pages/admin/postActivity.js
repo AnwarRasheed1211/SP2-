@@ -11,7 +11,6 @@ import { v4 as uuidv4 } from 'uuid'; // To generate unique IDs
 
 export default function PostActivity() {
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
@@ -20,6 +19,9 @@ export default function PostActivity() {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [error, setError] = useState(null);
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [image, setImage] = useState(null);
 
   // Handle file input change
   const handleFileChange = (e) => {
