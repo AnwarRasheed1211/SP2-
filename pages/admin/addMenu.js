@@ -59,31 +59,39 @@ export default function Addmenu() {
       await uploadBytes(storageRef, fileupload);
       const imageUrl = await getDownloadURL(storageRef);
 
-      // Add menu item details to Firestore
-      const docRef = await addDoc(collection(db, "menu"), {
+      setImageUrl(url);
+
+      // Generate a unique document ID
+      const menuId = uuidv4();
+
+
+      // Add menu item to Firestore
+      // Correct path assuming 'menu' is a collection within 'camelsrestaurant'
+      // Path: 'camelsrestaurant/{restaurantId}/menu/{menuId}'
+      await setDoc(doc(db, 'camels', 'camelsrestaurant', 'menu', menuId), {
         title,
         category,
-        price,
+        price: parseFloat(price),
         description,
-        imageUrl, // Add image URL to Firestore
+        imageUrl: url,
       });
 
-      setSuccessMessage('Menu item created successfully!');
+      // Show success message
+      alert("Menu item created successfully!");
 
-      // Clear the form
+      // Reset form
       setTitle('');
-      setCategory('');
+      setCategory('All');
       setPrice('');
       setDescription('');
-      setFileupload(null);
-      setImagePreview(null);
-      setUploadedUrl(imageUrl);  // Store uploaded URL for preview
-    } catch (e) {
-      setErrorMessage(`Failed to create menu item: ${e.message}`);
-    } finally {
-      setUploading(false);
+      setImage(null);
+      setImageUrl('');
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Error adding document: " + error.message);
     }
   };
+
 
   return (
     <>
@@ -126,29 +134,29 @@ export default function Addmenu() {
             </div>
 
             <form className={Style['container-text']} onSubmit={handleSubmit}>
-                            <label className={Style['text']}>Title</label>
-                            <input className={Style['input']} value={title} onChange={(e) => setTitle(e.target.value)} />
+              <label className={Style['text']}>Title</label>
+              <input className={Style['input']} value={title} onChange={(e) => setTitle(e.target.value)} />
 
-                            <label className={Style['text']}>Category</label>
-                            <select className={Style['input']} value={category} onChange={(e) => setCategory(e.target.value)}>
-                                {categories.map((cat, index) => (
-                                    <option key={index} value={cat}>{cat}</option>
-                                ))}
-                            </select>
+              <label className={Style['text']}>Category</label>
+              <select className={Style['input']} value={category} onChange={(e) => setCategory(e.target.value)}>
+                {categories.map((cat, index) => (
+                  <option key={index} value={cat}>{cat}</option>
+                ))}
+              </select>
 
-                            <label className={Style['text']}>Price</label>
-                            <input className={Style['input']} type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+              <label className={Style['text']}>Price</label>
+              <input className={Style['input']} type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
 
-                            <label className={Style['text']}>Description</label>
-                            <textarea className={Style['input']} rows="3" cols="30" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <label className={Style['text']}>Description</label>
+              <textarea className={Style['input']} rows="3" cols="30" value={description} onChange={(e) => setDescription(e.target.value)} />
 
-                            <div className={Style['button-container']}>
-                                <button type="submit" className={Style['create-button']}>Create</button>
-                                <Link href={'/admin/adminMenu'}>
-                                    <button type="button" className={Style['create-button']}>Back</button>
-                                </Link>
-                            </div>
-                        </form>
+              <div className={Style['button-container']}>
+                <button type="submit" className={Style['create-button']}>Create</button>
+                <Link href={'/admin/adminMenu'}>
+                  <button type="button" className={Style['create-button']}>Back</button>
+                </Link>
+              </div>
+            </form>
             {successMessage && <p className={Style['success-message']}>{successMessage}</p>}
             {errorMessage && <p className={Style['error-message']}>{errorMessage}</p>}
           </div>

@@ -2,25 +2,12 @@ import CustomerNavbar from "@/components/customerNavbar";
 import CustomerNavbarBottom from "@/components/customerBottomNavbar";
 import Image from "next/image";
 import styles from '@/styles/booking.module.css';
-import React, { useState } from 'react';
-
-const user = {
-    firstName: 'John',
-    lastName: 'Doe',
-    phoneNumber: '123-456-7890',
-    email: 'john.doe@example.com',
-    bookingDate: '2024-07-20',
-    bookingTime: '19:00 - 20:00 ',
-    tableNumber: ['12','1'],
-    externalMessage: 'History, formerly and commonly known as the History Channel, is an American pay television network and flagship channel owned by A&E Networks, a joint venture between Hearst Communications and The Walt Disney Company General Entertainment Content Division.',
-    status: 'Payment Incomplete',
-    bookingFees: '100',
-    order: [
-        { name: 'Grilled Chicken', quantity: 2, price: '฿12.99' },
-        { name: 'Lemonade', quantity: 3, price: '฿3.99' }
-    ],
-    remainingbills: '100'
-};
+import React, { useState, useEffect } from 'react';
+import { db, storage } from "@/pages/lib/firebase"; // Ensure this path is correct
+import { collection, getDocs, query, where, getDoc, doc  } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { useRouter } from 'next/router';
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function customerBookList() {
 
@@ -28,11 +15,97 @@ export default function customerBookList() {
     const [imageFile, setImageFile] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
     const [cancelModalVisible, setCancelModalVisible] = useState(false);
+    const [bookingId, setBookingId] = useState(null);
+    const [userEmail, setUserEmail] = useState("");
+    const [order, setOrder] = useState([]);
+    const [user, setUser] = useState({});
+    const [loading, setLoading] = useState(true); 
+    
+    useEffect(() => {
+        const auth = getAuth();
+    
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserEmail(user.email); // Set user email if authenticated
+            } else {
+                setUserEmail(null); // Reset user email if not authenticated
+            }
+        });
+    
+        return () => unsubscribe(); // Cleanup subscription on unmount
+    }, []);
+
+    useEffect(() => {
+        const fetchBookings = async () => {
+            if (!userEmail) return; // Only fetch if userEmail is set
+            try {
+                const bookingsRef = collection(db, 'camels', 'camelsrestaurant', 'reservedSeats');
+                const q = query(bookingsRef, where("email", "==", userEmail));
+                const querySnapshot = await getDocs(q);
+        
+                const bookings = [];
+                querySnapshot.forEach((doc) => {
+                    bookings.push({ id: doc.id, ...doc.data() });
+                });
+        
+                if (bookings.length > 0) {
+                    // Set the first booking as the user data (or adjust as needed)
+                    const latestBooking = bookings[0]; // Or any logic to select the right booking
+                    setUser({
+                        firstName: latestBooking.firstName || 'N/A',
+                        lastName: latestBooking.lastName || 'N/A',
+                        phone: latestBooking.phone || 'N/A',
+                        email: userEmail, // Use the authenticated email
+                        date: latestBooking.date || 'N/A',
+                        timeSlot: latestBooking.timeSlot || 'N/A',
+                        selectedSeats: latestBooking.selectedSeats || [],
+                        message: latestBooking.message || 'N/A',
+                        menuOrders: latestBooking.menuOrders || [],
+                        bookingStatus: latestBooking.bookingStatus || 'N/A',
+                        totalbookingFee: latestBooking.totalBookingFee || 0,
+                    });
+                } else {
+                    // Handle case with no bookings
+                    setUser({
+                        firstName: 'N/A',
+                        lastName: 'N/A',
+                        phone: 'N/A',
+                        email: userEmail,
+                        date: 'N/A',
+                        timeSlot: 'N/A',
+                        selectedSeats: [],
+                        menuOrders: [],
+                        message: 'N/A',
+                        bookingStatus: 'N/A',
+                        totalbookingFee: 0,
+                    });
+                }
+    
+                setOrder(bookings); // Set the bookings data
+                setLoading(false); // Set loading to false after fetching
+            } catch (error) {
+                console.error('Error fetching bookings: ', error);
+                setLoading(false);
+            }
+        };
+        
+        fetchBookings();
+    }, [userEmail]);
+    
+    
 
     const calculateTotal = () => {
-        const orderTotal = user.order.reduce((total, item) => total + (parseFloat(item.price.replace('฿', '')) * item.quantity), 0);
-        return (orderTotal).toFixed(2);
+        // Check if order is an array and has elements
+        return Array.isArray(user.menuOrders) && user.menuOrders.length > 0
+            ? user.menuOrders.reduce((total, item) => {
+                // Check if item.price and item.quantity are defined and valid
+                const price = parseFloat(item.price?.toString().replace('฿', '') || 0);
+                const quantity = item.quantity || 0; // Fallback to 0 if quantity is undefined
+                return total + (price * quantity);
+            }, 0).toFixed(2)
+            : '0.00'; // Return '0.00' if order is empty
     };
+    
 
     const handleImageUpload = (event) => {
         const file = event.target.files[0];
@@ -60,25 +133,25 @@ export default function customerBookList() {
                                             <div className={styles.section}>
                                                 <h3>Contact Information</h3>
                                                 <div className={styles.contactRow}>
-                                                    <p>First Name: {user.firstName}</p>
-                                                    <p>Last Name: {user.lastName}</p>
+                                                    <p>First Name: {user.firstName }</p>
+                                                    <p>Last Name: {user.lastName }</p>
                                                 </div>
-                                                <p>Phone Number: {user.phoneNumber}</p>
-                                                <p>Email: {user.email}</p>
+                                                <p>Phone Number: {user.phone }</p>
+                                                <p>Email: {user.email }</p>
                                             </div>
                                             <div className={styles.section}>
                                                 <h3>Booking Date and Time</h3>
                                                 <div className={styles.contactRow}>
-                                                    <p>Date: {user.bookingDate}</p>
-                                                    <p>Time: {user.bookingTime}</p>
+                                                    <p>Date: {user.date}</p>
+                                                    <p>Time: {user.timeSlot}</p>
                                                 </div>
                                             </div>
                                             <div className={styles.section}>
                                                 <h3>Table Reservation</h3>
-                                                <p>Number of Seats: {user.tableNumber.length}</p>
-                                                <p>Seats Booked: {user.tableNumber.join(', ')}</p>
-                                                <p>Message: {user.externalMessage}</p>
-                                                <p>Status: {user.status}
+                                                <p>Number of Seats: {user.selectedSeats?.length || 0}</p> {/* Safely access length */}
+                                                <p>Seats Booked: {user.selectedSeats && user.selectedSeats.join(', ')}</p>
+                                                <p>Message: {user.message}</p>
+                                                <p>Status: {user.bookingStatus}
                                                 {user.status === 'Payment Incomplete' && (
                                                     <button className={styles.viewButton} onClick={() => setModalVisible(true)}>View</button>
                                                 )}
@@ -89,16 +162,16 @@ export default function customerBookList() {
                                     <div className={styles.billSummary}>
                                             <h2>Order Summary</h2>
                                             <ul>
-                                                {user.order.map((item, index) => (
-                                                    <li key={index}>
-                                                        <div className={styles.itemInfo}>
-                                                            <span>{item.quantity} x {item.name} = {item.price}</span>
-                                                        </div>
-                                                    </li>
-                                                ))}
+                                                {user.menuOrders && user.menuOrders.length > 0 ? (
+                                                    user.menuOrders.map((order, index) => (
+                                                        <li key={index}>{order.quantity} x {order.title} = {order.price}</li>
+                                                    ))
+                                                ) : (
+                                                    <li>No menu orders placed.</li>
+                                                )}
                                             </ul>
                                             <div className={styles.fee}>
-                                                <span>Booking Fee: ฿{user.bookingFees}</span>
+                                                <span>Booking Fee: ฿{user.totalbookingFee}</span>
                                             </div>
                                             <h3>Total(Pay at Restaurant): ฿{calculateTotal()}</h3>
                                             <button className={styles.cancelButton} onClick={() => setCancelModalVisible(true)}>CANCEL</button>

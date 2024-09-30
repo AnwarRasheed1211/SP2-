@@ -1,5 +1,5 @@
 import Navbar from "@/components/navbar";
-import CustomerNavbarBottom from "@/components/customerBottomNavbar";
+import CustomerNavbarBottom from "@/components/adminBottomNavbar";
 import Image from "next/image";
 import styles from '@/styles/activity.module.css';
 import Link from "next/link";

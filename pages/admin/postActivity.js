@@ -8,6 +8,7 @@ import Link from "next/link";
 import { db } from '../api/firebaseConfig';
 import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from 'react';
+import { v4 as uuidv4 } from 'uuid'; // To generate unique IDs
 
 export default function PostActivity() {
   const [title, setTitle] = useState('');
@@ -53,32 +54,34 @@ export default function PostActivity() {
       const storageRef = ref(storage, `activity/${fileupload.name}`);
       await uploadBytes(storageRef, fileupload);
       const imageUrl = await getDownloadURL(storageRef);
+      setImageUrl(url);
 
-      // Add the post details to Firestore
-      const docRef = await addDoc(collection(db, "activity"), {
-        title: title,
-        date: date,
-        description: description,
-        imageUrl: imageUrl,
-      });
+      // Generate a unique document ID
+      const activityId = uuidv4();
 
-      console.log("Document written with ID: ", docRef.id);
-      setSuccessMessage('Post created successfully!');
+      // Add activity post to Firestore
+      await setDoc(doc(db, 'camels', 'camelsrestaurant', 'activities', activityId), {
+        title,
+        startDate,
+        endDate,
+        description,
+        imageUrl: url,
+    });
 
-      // Clear input fields after successful submission
-      setTitle('');
-      setDate('');
-      setDescription('');
-      setFileupload(null);
-      setImagePreview(null);
-      setUploadedUrl(imageUrl);  // Store the uploaded URL for preview
-    } catch (e) {
-      console.error("Error adding document:", e.message);
-      setErrorMessage(`Failed to create post: ${e.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
+    // Reset form
+    setTitle('');
+    setStartDate('');
+    setEndDate('');
+    setDescription('');
+    setImage(null);
+    setImageUrl('');
+
+    alert("Post created successfully!");
+} catch (error) {
+    console.error("Error adding document: ", error);
+    alert("Error creating post: " + error.message);
+}
+};
 
   return (
     <>
@@ -87,7 +90,7 @@ export default function PostActivity() {
         <div className={styles['cover']}>
           <div className={styles['container']}>CREATE POST</div>
           <div className={styles['container2']}>
-          <div className={styles['container-pic']}>
+            <div className={styles['container-pic']}>
               {/* "Choose File" at the bottom */}
               {imagePreview && (
                 <div>
@@ -115,22 +118,30 @@ export default function PostActivity() {
                   />
                 </div>
               )}
-              
+
               {/* Choose file input at the bottom of the container */}
               <input type="file" onChange={handleFileChange} />
             </div>
             <form className={styles['container-text']} onSubmit={handleSubmit}>
-              <label className={styles['text']}> Title</label>
+              <label className={styles['text']}>Title</label>
               <input
                 className={styles['input']}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
-              <label className={styles['text']}> Date and Time</label>
+              <label className={styles['text']}>Start Date</label>
               <input
+                type="date"
                 className={styles['input']}
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+              />
+              <label className={styles['text']}>End Date</label>
+              <input
+                type="date"
+                className={styles['input']}
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
               />
               <label className={styles['text']}> Description</label>
               <input
