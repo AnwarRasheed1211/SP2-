@@ -2,13 +2,12 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import { storage } from '../api/firebaseConfig';
+import {db , storage } from '@/pages/api/firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Style from '@/styles/addmenu.module.css';
 import AdminNavbar from "@/components/adminNavbar";
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
-import { db } from '../api/firebaseConfig';
 import { collection, addDoc } from "firebase/firestore";
 
 export default function Addmenu() {

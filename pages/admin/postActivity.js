@@ -1,11 +1,10 @@
 import Image from 'next/image';
-import { storage } from '../api/firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import AdminNavbar from "@/components/adminNavbar";
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import styles from '@/styles/postactivity.module.css';
 import Link from "next/link";
-import { db } from '../api/firebaseConfig';
+import { db, storage } from '@/pages/api/firebaseConfig';
 import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // To generate unique IDs
