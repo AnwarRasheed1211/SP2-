@@ -45,51 +45,52 @@ export default function Addmenu() {
     setUploading(true);
     setSuccessMessage('');
     setErrorMessage('');
-
+  
     if (!fileupload) {
       setErrorMessage('Please select an image to upload.');
       setUploading(false);
       return;
     }
-
+  
     try {
       // Upload image to Firebase Storage
       const storageRef = ref(storage, `menu/${fileupload.name}`);
       await uploadBytes(storageRef, fileupload);
       const imageUrl = await getDownloadURL(storageRef);
-
-      setImageUrl(url);
-
+  
+      setUploadedUrl(imageUrl);  // Corrected this line
+  
       // Generate a unique document ID
       const menuId = uuidv4();
-
-
+  
       // Add menu item to Firestore
-      // Correct path assuming 'menu' is a collection within 'camelsrestaurant'
-      // Path: 'camelsrestaurant/{restaurantId}/menu/{menuId}'
       await setDoc(doc(db, 'camels', 'camelsrestaurant', 'menu', menuId), {
         title,
         category,
         price: parseFloat(price),
         description,
-        imageUrl: url,
+        imageUrl: imageUrl,  // Corrected to use imageUrl
       });
-
+  
       // Show success message
       alert("Menu item created successfully!");
-
+  
       // Reset form
       setTitle('');
       setCategory('All');
       setPrice('');
       setDescription('');
-      setImage(null);
-      setImageUrl('');
+      setFileupload(null);
+      setUploadedUrl('');  // Reset the uploaded URL
+  
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("Error adding document: " + error.message);
+    } finally {
+      setUploading(false);
     }
   };
+  
 
 
   return (

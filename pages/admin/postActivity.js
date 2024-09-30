@@ -43,46 +43,46 @@ export default function PostActivity() {
     setLoading(true);
     setSuccessMessage('');
     setErrorMessage('');
-
+  
     if (!fileupload) {
       setErrorMessage('Please select an image to upload.');
       setLoading(false);
       return;
     }
-
+  
     try {
       // Upload image to Firebase Storage
       const storageRef = ref(storage, `activity/${fileupload.name}`);
       await uploadBytes(storageRef, fileupload);
       const imageUrl = await getDownloadURL(storageRef);
-      setImageUrl(url);
-
+      setUploadedUrl(imageUrl); // Corrected this line
+  
       // Generate a unique document ID
       const activityId = uuidv4();
-
+  
       // Add activity post to Firestore
       await setDoc(doc(db, 'camels', 'camelsrestaurant', 'activities', activityId), {
         title,
         startDate,
         endDate,
         description,
-        imageUrl: url,
-    });
-
-    // Reset form
-    setTitle('');
-    setStartDate('');
-    setEndDate('');
-    setDescription('');
-    setImage(null);
-    setImageUrl('');
-
-    alert("Post created successfully!");
-} catch (error) {
-    console.error("Error adding document: ", error);
-    alert("Error creating post: " + error.message);
-}
-};
+        imageUrl, // Use the correct imageUrl
+      });
+  
+      // Reset form
+      setTitle('');
+      setStartDate('');
+      setEndDate('');
+      setDescription('');
+      setFileupload(null); // Reset the file input
+      setUploadedUrl(''); // Reset the uploaded URL
+  
+      alert("Post created successfully!");
+    } catch (error) {
+      console.error("Error adding document: ", error);
+      alert("Error creating post: " + error.message);
+    }
+  };
 
   return (
     <>
