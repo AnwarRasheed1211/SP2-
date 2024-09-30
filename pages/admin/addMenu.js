@@ -9,6 +9,9 @@ import AdminNavbar from "@/components/adminNavbar";
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
 import { collection, addDoc } from "firebase/firestore";
+import { v4 as uuidv4 } from 'uuid';
+
+
 
 export default function Addmenu() {
   const [title, setTitle] = useState('');
