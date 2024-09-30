@@ -2,18 +2,18 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
-import {db , storage } from '@/pages/api/firebaseConfig';
+import { useRouter } from 'next/router';  // Import useRouter
+import { db, storage } from '@/pages/api/firebaseConfig';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import Style from '@/styles/addmenu.module.css';
 import AdminNavbar from "@/components/adminNavbar";
 import AdminNavbarBottom from "@/components/adminBottomNavbar";
 import Link from "next/link";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from 'uuid';
 
-
-
 export default function Addmenu() {
+  const router = useRouter();  // Initialize useRouter
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
@@ -22,13 +22,10 @@ export default function Addmenu() {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedUrl, setUploadedUrl] = useState(null);
-  const [error, setError] = useState(null);
-  const [successMessage, setSuccessMessage] = useState('');  // Success message
-  const [errorMessage, setErrorMessage] = useState('');      // Error message
+  const [errorMessage, setErrorMessage] = useState('');
 
   let categories = ["All", "Main", "Fried Food", "Salad", "Dessert", "Drinks"];
 
-  // Handle file input change
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     setFileupload(file);
@@ -46,7 +43,6 @@ export default function Addmenu() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    setSuccessMessage('');
     setErrorMessage('');
   
     if (!fileupload) {
@@ -61,7 +57,7 @@ export default function Addmenu() {
       await uploadBytes(storageRef, fileupload);
       const imageUrl = await getDownloadURL(storageRef);
   
-      setUploadedUrl(imageUrl);  // Corrected this line
+      setUploadedUrl(imageUrl);
   
       // Generate a unique document ID
       const menuId = uuidv4();
@@ -72,19 +68,11 @@ export default function Addmenu() {
         category,
         price: parseFloat(price),
         description,
-        imageUrl: imageUrl,  // Corrected to use imageUrl
+        imageUrl: imageUrl,
       });
   
-      // Show success message
-      alert("Menu item created successfully!");
-  
-      // Reset form
-      setTitle('');
-      setCategory('All');
-      setPrice('');
-      setDescription('');
-      setFileupload(null);
-      setUploadedUrl('');  // Reset the uploaded URL
+      // Redirect to the menu page after success
+      router.push('/admin/adminMenu');  // Navigate to menu page
   
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -93,8 +81,6 @@ export default function Addmenu() {
       setUploading(false);
     }
   };
-  
-
 
   return (
     <>
@@ -104,7 +90,6 @@ export default function Addmenu() {
           <div className={Style['container']}>NEW MENU</div>
           <div className={Style['container2']}>
             <div className={Style['container-pic']}>
-              {/* "Choose File" at the bottom */}
               {imagePreview && (
                 <div>
                   <Image
@@ -116,23 +101,6 @@ export default function Addmenu() {
                   />
                 </div>
               )}
-
-              {error && <p className={Style['error']}>{error}</p>}
-
-              {uploadedUrl && (
-                <div>
-                  <p>Uploaded image:</p>
-                  <Image
-                    src={uploadedUrl}
-                    alt="Uploaded image"
-                    width={300}
-                    height={300}
-                    style={{ width: "100%", height: "auto" }}
-                  />
-                </div>
-              )}
-
-              {/* Choose file input at the bottom of the container */}
               <input type="file" onChange={handleFileChange} />
             </div>
 
@@ -160,7 +128,6 @@ export default function Addmenu() {
                 </Link>
               </div>
             </form>
-            {successMessage && <p className={Style['success-message']}>{successMessage}</p>}
             {errorMessage && <p className={Style['error-message']}>{errorMessage}</p>}
           </div>
         </div>

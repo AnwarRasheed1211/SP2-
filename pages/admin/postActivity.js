@@ -8,6 +8,8 @@ import { db, storage } from '@/pages/api/firebaseConfig';
 import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid'; // To generate unique IDs
+import { doc, setDoc } from "firebase/firestore";
+
 
 export default function PostActivity() {
   const [title, setTitle] = useState('');
@@ -81,6 +83,8 @@ export default function PostActivity() {
     } catch (error) {
       console.error("Error adding document: ", error);
       alert("Error creating post: " + error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,7 +109,7 @@ export default function PostActivity() {
                 </div>
               )}
 
-              {error && <p className={Style['error']}>{error}</p>}
+              {error && <p className={styles['error']}>{error}</p>}
 
               {uploadedUrl && (
                 <div>
