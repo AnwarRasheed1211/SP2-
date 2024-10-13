@@ -7,6 +7,8 @@ import styles from '@/styles/booking.module.css';
 import { db, storage } from "@/pages/api/firebaseConfig"; // Ensure this path is correct
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, getDocs, deleteDoc, doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
 import Link from "next/link";
 
 export default function paymentForm() {
@@ -19,6 +21,7 @@ export default function paymentForm() {
     const [message, setMessage] = useState('');
     const [image, setImage] = useState(null);
     const [imageUrl, setImageUrl] = useState('');
+    const [userEmail, setUserEmail] = useState("");
 
     useEffect(() => {
         const storedBookingId = localStorage.getItem('bookingId');
@@ -40,6 +43,21 @@ export default function paymentForm() {
         }
       }, [router.query])
 
+
+    useEffect(() => {
+        const auth = getAuth();
+    
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUserEmail(user.email); // Set user email if authenticated
+            } else {
+                setUserEmail(null); // Reset user email if not authenticated
+            }
+        });
+    
+        return () => unsubscribe(); // Cleanup subscription on unmount
+    }, []);
+
     const handleImageChange = (e) => {
         if (e.target.files[0]) {
             setImage(e.target.files[0]);
@@ -47,7 +65,7 @@ export default function paymentForm() {
     };
 
     const uploadImage = async (image) => {
-        const storageRef = ref(storage, `receipt/${image.name}`);
+        const storageRef = ref(storage, `receipt/${userEmail}_${Date.now()}`);
         await uploadBytes(storageRef, image);
         const url = await getDownloadURL(storageRef);
         return url;
