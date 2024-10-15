@@ -56,9 +56,7 @@ export default function adminHome() {
                     <Link href={'/admin/adminMenu'}>
                         <button className={styles.menuButton}>Menu</button>
                     </Link>
-                    <Link href={'/booking/bookingTable'}>
-                        <button className={styles.bookTableButton}>Book a Table</button>
-                    </Link>
+                   
                 </div>
 
                 <div className={styles.head}>ANNOUNCEMENT </div>
